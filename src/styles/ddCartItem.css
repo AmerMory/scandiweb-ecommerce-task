@@ -1,0 +1,131 @@
+.cart-item-container {
+    display: grid;
+    grid-template-columns: 1fr auto 0.8fr;
+    margin: 50px 0px;
+}
+
+.cart-item-container:first-child {
+    margin-top: 20px;
+}
+
+.data {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.count {
+    align-items: end;
+    margin-right: 9px;
+    display: flex;
+    flex-direction: column;
+}
+
+.cart-item-container .count .count-data {
+    display: flex;
+    align-content: flex-end;
+    height: 100%;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.image {
+    width: 100%;
+    height: 180px;
+    overflow: hidden;
+}
+
+.image img {
+    width: 100%;
+    object-fit: cover;
+}
+
+.data-btn {
+    width: 25px;
+    height: 25px;
+    font-family: 'Raleway', sans-serif;
+    font-size: 20px;
+    line-height: 2px;
+    background-color: transparent;
+    border: 1.5px solid var(--secondary-color);
+    cursor: pointer;
+}
+
+.attributes-container .text-container {
+    max-width: 90%;
+    display: flex;
+}
+
+.attributes-container p {
+    margin: 15px 0px 5px 0px;
+}
+
+.attributes-container .color-container .color-buttons {
+    display: flex;
+    
+}
+
+.attributes-container .color-container .color-buttons button {
+    position: relative;
+    margin: 0px 4.5px;
+}
+
+.attributes-container .color-container .color-buttons button:first-child {
+    margin-left: 0px;
+}
+
+.attributes-container .color-container .color-buttons .active-swatch::after {
+    content: '';
+    width: calc(100% + 1px);
+    height: calc(100% + 1px);
+    position: absolute;
+    top: -4px;
+    left: -3.5px;
+    border: 3px solid var(--primary-color);
+}
+
+.data-btn:active {
+    background-color: var(--secondary-color);
+    color: #fff;
+}
+
+.attributes-size,
+.attributes-capacity,
+.attributes-color,
+.attributes-yesNo {
+    margin: 0px 4.5px;
+    font-size: 16px;
+    width: 30%;
+    height: 25px;
+}
+
+.active-size,
+.active-capacity,
+.active-yesNo {
+    background-color: var(--secondary-color);
+    color: #fff;
+}
+
+.attributes-size:first-child,
+.attributes-capacity:first-child,
+.attributes-color:first-child,
+.attributes-yesNo:first-child {
+    margin-left: 0px;
+}
+
+.attributes-size:last-child,
+.attributes-capacity:last-child,
+.attributes-color:last-child {
+    margin-right: 0px;
+}
+
+.data .title {
+    font-weight: var(--light);
+    font-size: 1.5em;
+}
+
+.cart-item-container .data .price {
+    font-weight: var(--medium);
+    font-size: 1.2em;
+}
