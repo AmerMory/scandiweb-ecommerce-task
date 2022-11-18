@@ -118,10 +118,11 @@ function App() {
     setCartHoverd(false);
   }
 
-  const [selectedProductDetails, setSelectedProductDetails] = React.useState([]);
+  const [selectedProductDetails, setSelectedProductDetails] = React.useState([
+  ]);
 
   const handleSelectedProductDetails = (productId, price) => {
-      setSelectedProductDetails(productId, price)
+      setSelectedProductDetails([productId, price])
   }
 
   const [selectedProductPage, setSelectedProductPage] = React.useState('');
@@ -169,6 +170,8 @@ function App() {
           selected={selected}
           selectedCurrency={selectedCurrency}
           setSelectedCurrency={setSelectedCurrency}
+          selectedProductDetails={selectedProductDetails}
+          setSelectedProductDetails={setSelectedProductDetails}
           handleSelectedProductDetails={handleSelectedProductDetails}
           selectedProductPage={selectedProductPage}
           setSelectedProductPage={setSelectedProductPage}

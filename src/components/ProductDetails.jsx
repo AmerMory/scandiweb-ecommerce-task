@@ -3,8 +3,10 @@ import React, { Component } from 'react'
 import '../styles/productDetails.css'
 import PrimaryBTN from './PrimaryBTN'
 
+const selectedProductDetails = JSON.parse(localStorage.getItem('selectedProductDetails'))
 export default class ProductDetails extends Component {
-  url = window.location.pathname.slice(1);
+
+  url = selectedProductDetails[0];
 
   state = {
     selectedProduct: "",
@@ -99,7 +101,7 @@ export default class ProductDetails extends Component {
   }
 
   render() {
-
+    console.log(this.selectedProductDetails);
     return (
       <div className='product-details container'>
         {this.props.data.loading === true ? <div>Loading...</div> :

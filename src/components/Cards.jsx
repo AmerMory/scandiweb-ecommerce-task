@@ -23,6 +23,8 @@ export default class Cards extends React.Component {
             setSelectedCurrency={this.props.setSelectedCurrency}
             amount={this.props.amount}
             setAmount={this.props.setAmount}
+            selectedProductDetails={this.props.selectedProductDetails}
+            setSelectedProductDetails={this.props.setSelectedProductDetails}
             handleSelectedProductDetails={this.props.handleSelectedProductDetails}
             selectedProductPage={this.props.selectedProductPage}
             setSelectedProductPage={this.props.setSelectedProductPage} 

@@ -4,6 +4,7 @@
     height: 3em;
     padding: 13px;
     position: absolute;
+    z-index: 20;
     right: 25px;
     top: 300px;
     border-radius: 50%;
