@@ -16,6 +16,8 @@ query {
       inStock
       gallery
       category
+      brand
+    	description
       attributes {
         id
         name
@@ -85,7 +87,9 @@ function App() {
     localStorage.setItem("selected", JSON.stringify(selected));
   }, [selected]);
 
-  const handleClick = (item, amount) => () => {
+  const [productKeyNumber, setProductKeyNumber] = React.useState(0);
+
+  const handleClick = (item, amount, key) => () => {
     if (!selected.some(s => s[0].id === item.id)) {
       setSelected([...selected,
       [
@@ -93,9 +97,23 @@ function App() {
         ...selectedCurrency,
         { amount: parseFloat(amount.replace(/,/g, '')) },
         { qty: 1 },
+        `${key}-${productKeyNumber}`,
       ]
       ]);
       setCartNumber(cartNumber + 1);
+      setProductKeyNumber(productKeyNumber + 1);
+    } else {
+      setSelected([...selected,
+        [
+          item,
+          ...selectedCurrency,
+          { amount: parseFloat(amount.replace(/,/g, '')) },
+          { qty: 1 },
+          `${key}-${productKeyNumber}`,
+        ]
+        ]);
+        setCartNumber(cartNumber + 1);
+        setProductKeyNumber(productKeyNumber + 1);
     }
   }
 
@@ -162,7 +180,6 @@ function App() {
 
         {cartHoverd === true && <div className="overlay"></div> }
 
-
         <Routes>
         <Route path="/" element={<Cards
           handleData={apiData}
@@ -202,16 +219,43 @@ function App() {
         totalPrice={totalPrice}
         />} />
 
-        <Route path="/:productID" element={<ProductDetails
-        selectedCurrency={selectedCurrency}
-        data={apiData}
-        selected={selected}
-        selectedProductDetails={selectedProductDetails}
-        click={handleClick}
-        yesNo={yesNo}
-        setYesNo={setYesNo}
-        handleYesNo={handleYesNo}
-        />} />
+
+          {window.location.pathname !== "/!" ?
+          <Route exact path='/:productID' element={<ProductDetails
+          selectedCurrency={selectedCurrency}
+          data={apiData}
+          selected={selected}
+          selectedProductDetails={selectedProductDetails}
+          click={handleClick}
+          yesNo={yesNo}
+          setYesNo={setYesNo}
+          handleYesNo={handleYesNo}
+          />} />
+          : <Route  path='*' element={<Cards
+            handleData={apiData}
+            selectedCategory={selectedCategory}
+            selected={selected}
+            selectedCurrency={selectedCurrency}
+            setSelectedCurrency={setSelectedCurrency}
+            selectedProductDetails={selectedProductDetails}
+            setSelectedProductDetails={setSelectedProductDetails}
+            handleSelectedProductDetails={handleSelectedProductDetails}
+            selectedProductPage={selectedProductPage}
+            setSelectedProductPage={setSelectedProductPage}
+            amount={amount}
+            setAmount={setAmount}
+            click={handleClick}
+            cartHoverdEffect={cartHoverd && "cart-hoverd"}
+            cartHoverd={cartHoverd}
+          />} />
+            
+          }
+
+          
+
+
+        <Route path="/*" element={"not found"} />
+
         </Routes>
 
       </div>

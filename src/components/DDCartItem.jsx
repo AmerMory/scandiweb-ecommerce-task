@@ -7,24 +7,19 @@ export default class DDCartItem extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            activeSize: '',
-            activeCapacity: '',
-            activeSwatch: '',
             imageNumber: 0,
             selectedProduct: "",
             selectedImage: "",
+            productAttributes: [],
+            yesNoAttributes: [],
             productData: {
                 id: this.props.id,
-                activeSize: '',
-                activeCapacity: '',
-                activeSwatch: '',
+                activeSize: '40',
+                activeCapacity: '1T',
+                activeSwatch: 'White',
                 activeYesNo: [
-                    {
-                        name: '',
-                        id: ''
-                    }
                 ]
-            }
+            },
         }
     }
 
@@ -37,20 +32,28 @@ export default class DDCartItem extends React.Component {
             return currentImage
         }
 
-        if (this.props.data.loading === false && this.state.selectedProduct === "") {
+        if (this.props.data.handleData.loading === false && this.state.selectedProduct === "") {
             this.setState({
-                selectedProduct: this.props.data.data.category.products.find(item => item.id === this.url)
+              selectedProduct: this.props.data.handleData.data.category.products.find(item => item.id === this.state.productData.id),
+              productAttributes: this.props.data.handleData.data.category.products.map(product => product).find(item => item.id === this.state.productData.id).attributes,
+              yesNoAttributes: this.props.data.handleData.data.category.products.map(product => product).find(item => item.id === this.state.productData.id).attributes.filter(att => att.name.includes(' ') === true),
+              productData: {
+                ...this.state.productData,
+                // activeYesNo should be an array of objects with name and id and 'yes' is the default id
+                activeYesNo: this.props.data.handleData.data.category.products.map(product => product).find(item => item.id === this.state.productData.id).attributes.filter(att => att.name.includes(' ') === true).map(att => ({ name: att.name, id: 'Yes' }))
+      
+              }
             })
-        }
+          }
 
-        if (this.state.productData.id !== localStorage.getItem(`${this.state.productData.id}` && this.state.productData.id === prevState)) {
-            localStorage.setItem(`${this.state.productData.id}`, JSON.stringify(this.state.productData))
+        if (this.props.productKeyNumber !== localStorage.getItem(`${this.props.productKeyNumber}` && this.props.productKeyNumber === prevState)) {
+            localStorage.setItem(`${this.props.productKeyNumber}`, JSON.stringify(this.state.productData))
         }
 
     }
 
     componentDidMount() {
-        const data = JSON.parse(localStorage.getItem(`${this.state.productData.id}`));
+        const data = JSON.parse(localStorage.getItem(`${this.props.productKeyNumber}`));
         if (data) {
             this.setState({
                 productData: data
@@ -94,19 +97,21 @@ export default class DDCartItem extends React.Component {
     productYesNo = (name, id) => {
 
         this.setState(prevState => ({
-            productData: {
-                ...prevState.productData,
-                activeYesNo: [
-                    ...prevState.productData.activeYesNo.filter(item => item.name !== name),
-                    {
-                        name: name,
-                        id: id,
-                    }
-                ]
-            }
+    
+          productData: {
+            ...prevState.productData,
+            activeYesNo: [
+              ...prevState.productData.activeYesNo.filter(item => item.name !== name),
+              {
+                name: name,
+                id: id,
+              }
+            ]
+          }
+    
         }))
-
-    }
+    
+      }
 
     get currentImage() {
         return this.props.cartItem[0].gallery[this.state.imageNumber]
@@ -116,14 +121,14 @@ export default class DDCartItem extends React.Component {
         this.props.data.setCartNumber(this.props.data.cartNumber - 1);
         this.props.data.setSelected(cart =>
             cart.map((item) => {
-                if (item[0].id === cardId) {
+                if (item[4] === cardId) {
                     item[3].qty--
                 }
                 return item;
             })
         )
         if (this.props.cartItem[3].qty === 1) {
-            this.props.handleRemove(this.props.id);
+            this.props.handleRemove(this.props.productKeyNumber);
         }
     }
 
@@ -131,7 +136,7 @@ export default class DDCartItem extends React.Component {
         this.props.data.setCartNumber(this.props.data.cartNumber + 1);
         this.props.data.setSelected(cart =>
             cart.map((item) => {
-                if (item[0].id === cardId) {
+                if (item[4] === cardId) {
                     item[3].qty++
                 }
                 return item;
@@ -162,6 +167,9 @@ export default class DDCartItem extends React.Component {
     }
 
     render() {
+        // this.props.data.data.category.products.map(product => product).find(item => item.id === this.url).attributes.filter(att => att.name.includes(' ') === true).map(att => ({ name: att.name, id: 'Yes' }))
+        // console.log(this.props.data.handleData.data.category.products.map(product => product).find(item => item.id === this.state.productData.id).attributes.filter(att => att.name.includes(' ') === true).map(att => ({ name: att.name, id: 'Yes' })))
+        // console.log(this.props.productKeyNumber);
         return (
             <>
                 {this.props.data.cartNumber >= 1 ?
@@ -181,17 +189,17 @@ export default class DDCartItem extends React.Component {
                                         <div className='text-container'>
                                             {attribute.name === "Size" && attribute !== null ?
                                                 <>
-                                                    {attribute.items.map(attrItem => <button key={attrItem.id} type='button' className={`data-btn attributes-size ${this.state.productData.activeSize === attrItem.id ? 'active-size' : ''}`} onClick={() => this.handleSize(attrItem.id)} >{attrItem.displayValue}</button>)}
+                                                    {attribute.items.map(attrItem => <button key={attrItem.id + Math.random()} type='button' className={`data-btn attributes-size ${this.state.productData.activeSize === attrItem.id ? 'active-size' : ''}`} onClick={() => this.handleSize(attrItem.id)} >{attrItem.displayValue}</button>)}
                                                 </>
                                                 :
 
                                                 attribute.name.length > 10 ?
                                                     <>
-                                                        {attribute.items.map(attrItem => <button key={attrItem.id} type='button' className={`data-btn attributes-yesNo ${this.state.productData.activeYesNo.some(item => item.id === attrItem.id && item.name === attribute.name) ? 'active-yesNo' : ''}`} onClick={() => this.productYesNo(attribute.name, attrItem.id)} >{attrItem.displayValue}</button>)} </>
+                                                        {attribute.items.map(attrItem => <button key={attrItem.id + Math.random()} type='button' className={`data-btn attributes-yesNo ${this.state.productData.activeYesNo.some(item => item.id === attrItem.id && item.name === attribute.name) ? 'active-yesNo' : ''}`} onClick={() => this.productYesNo(attribute.name, attrItem.id)} >{attrItem.displayValue}</button>)} </>
                                                     : attribute.name === "Capacity" ?
                                                         <>
                                                             {attribute.items.map(attrItem =>
-                                                                <button key={attrItem.id} type='button' className={`data-btn attributes-capacity ${this.state.productData.activeCapacity === attrItem.id ? 'active-capacity' : ''}`} onClick={() => this.handleCapacity(attrItem.id)} >{attrItem.displayValue}</button>)}
+                                                                <button key={attrItem.id + Math.random()} type='button' className={`data-btn attributes-capacity ${this.state.productData.activeCapacity === attrItem.id ? 'active-capacity' : ''}`} onClick={() => this.handleCapacity(attrItem.id)} >{attrItem.displayValue}</button>)}
                                                         </>
                                                         : null}
                                         </div> </>)}
@@ -202,7 +210,7 @@ export default class DDCartItem extends React.Component {
                                                 <>
                                                     <div className="color-buttons">
                                                         {attribute.items.map(attrItem =>
-                                                            <button key={attrItem.id} type='button' className={`data-btn attributes-swatch ${this.state.productData.activeSwatch === attrItem.id ? 'active-swatch' : ''}`} onClick={() => this.handleSwatch(attrItem.id)} style={{ backgroundColor: `${attrItem.value}` }} ></button>)}
+                                                            <button key={attrItem.id + Math.random()} type='button' className={`data-btn attributes-swatch ${this.state.productData.activeSwatch === attrItem.id ? 'active-swatch' : ''}`} onClick={() => this.handleSwatch(attrItem.id)} style={{ backgroundColor: `${attrItem.value}` }} ></button>)}
                                                     </div>
                                                 </>
                                                 : null}
@@ -212,9 +220,9 @@ export default class DDCartItem extends React.Component {
                         </div>
                         <div className="count">
                             <div className="count-data">
-                                <button type='button' onClick={() => this.cartItemIncrement(this.props.id)} className="data-btn">+</button>
+                                <button type='button' onClick={() => this.cartItemIncrement(this.props.productKeyNumber)} className="data-btn">+</button>
                                 <span>{this.props.cartItem[3].qty}</span>
-                                <button type='button' onClick={() => this.cartItemDecrement(this.props.id)} className="data-btn">-</button>
+                                <button type='button' onClick={() => this.cartItemDecrement(this.props.productKeyNumber)} className="data-btn">-</button>
                             </div>
                         </div>
                         <div className="image">

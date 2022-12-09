@@ -15,7 +15,7 @@ componentDidUpdate(prevProps, prevState) {
 }
 
 handleRemove = (id) => {
-  this.props.setSelected(prevState => prevState.filter(item => item[0].id !== id) )
+  this.props.setSelected(prevState => prevState.filter(item => item[4] !== id) )
 }
 
   render() {
@@ -28,7 +28,7 @@ handleRemove = (id) => {
         {this.props.selected.map(cartItem => (
           <>
           <hr style={{opacity:"0.3"}}/>
-          <DDCartItem cartItem={cartItem} key={cartItem[0].id} productName={true} controllers={true} id={cartItem[0].id} handleRemove={this.handleRemove} data={this.props} title={cartItem[0].name} img={cartItem[0].gallery[0]} yesNo={this.props.yesNo} setYesNo={this.props.setYesNo} handleYesNo={this.props.handleYesNo} />
+          <DDCartItem cartItem={cartItem} key={cartItem[0].id} productKeyNumber={cartItem[4]} productName={true} controllers={true} id={cartItem[0].id} handleRemove={this.handleRemove} data={this.props} title={cartItem[0].name} img={cartItem[0].gallery[0]} yesNo={this.props.yesNo} setYesNo={this.props.setYesNo} handleYesNo={this.props.handleYesNo} />
           </>
         ))}
         <hr style={{opacity:"0.3"}}/>

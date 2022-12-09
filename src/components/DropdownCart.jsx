@@ -31,7 +31,7 @@ export default class DropdownCart extends React.Component {
 
 
     handleRemove = (id) => {
-        this.props.setSelected(prevState => prevState.filter(item => item[0].id !== id))
+        this.props.setSelected(prevState => prevState.filter(item => item[4] !== id))
     }
 
     render() {
@@ -51,7 +51,7 @@ export default class DropdownCart extends React.Component {
                         <h4>My Bag: <span className='bag-count'>{this.props.cartNumber} {this.props.cartNumber > 1 ? "Items" : "Item"}</span></h4>
                         <div className='ddcartItem-container' style={this.props.selected.length > 2 ? DDCartItemStyles : null}>
                             {this.props.selected.map(cartItem => (
-                                <DDCartItem cartItem={cartItem} key={cartItem[0].id} id={cartItem[0].id} handleRemove={this.handleRemove} data={this.props} title={cartItem[0].name} img={cartItem[0].gallery[0]} yesNo={this.props.yesNo} setYesNo={this.props.setYesNo} handleYesNo={this.props.handleYesNo} />
+                                <DDCartItem cartItem={cartItem} key={cartItem[0].key} id={cartItem[0].id} productKeyNumber={cartItem[4]} handleRemove={this.handleRemove} data={this.props} title={cartItem[0].name} img={cartItem[0].gallery[0]} yesNo={this.props.yesNo} setYesNo={this.props.setYesNo} handleYesNo={this.props.handleYesNo} />
                             ))}
                         </div>
                         <div className="total">

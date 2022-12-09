@@ -83,3 +83,15 @@
     position: absolute;
     display: flex;
 }
+
+.see-more {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 50px auto;
+}
+
+.disabled-btn{
+    cursor: not-allowed;
+    background-color: #e0e0e0;
+}

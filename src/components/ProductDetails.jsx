@@ -4,6 +4,7 @@ import '../styles/productDetails.css'
 import PrimaryBTN from './PrimaryBTN'
 
 const selectedProductDetails = JSON.parse(localStorage.getItem('selectedProductDetails'))
+
 export default class ProductDetails extends Component {
 
   url = selectedProductDetails[0];
@@ -11,37 +12,51 @@ export default class ProductDetails extends Component {
   state = {
     selectedProduct: "",
     selectedImage: "",
+    productAttributes: [],
+    yesNoAttributes: [],
     productData: {
       id: this.url,
-      activeSize: '',
-      activeCapacity: '',
-      activeSwatch: '',
+      activeSize: '40',
+      activeCapacity: '1T',
+      activeSwatch: 'White',
       activeYesNo: [
-        {
-          name: '',
-          id: ''
-        }
       ]
     },
   }
 
+  
+
   componentDidUpdate(prevProps, prevState) {
     if (this.props.data.loading === false && this.state.selectedProduct === "") {
       this.setState({
-        selectedProduct: this.props.data.data.category.products.find(item => item.id === this.url)
+        selectedProduct: this.props.data.data.category.products.find(item => item.id === this.url),
+        productAttributes: this.props.data.data.category.products.map(product => product).find(item => item.id === this.url).attributes,
+        yesNoAttributes: this.props.data.data.category.products.map(product => product).find(item => item.id === this.url).attributes.filter(att => att.name.includes(' ') === true),
+        productData: {
+          ...this.state.productData,
+          // activeYesNo should be an array of objects with name and id and 'yes' is the default id
+          activeYesNo: this.props.data.data.category.products.map(product => product).find(item => item.id === this.url).attributes.filter(att => att.name.includes(' ') === true).map(att => ({ name: att.name, id: 'Yes' }))
+
+        }
       })
     }
     
     if (this.state.productData.id !== localStorage.getItem(`${this.state.productData.id}` && this.state.productData.id === prevState)) {
       localStorage.setItem(`${this.state.productData.id}`, JSON.stringify(this.state.productData))
     }
+    // if (this.state.selectedProduct !== prevState.selectedProduct) {
+      
+    //   console.log(this.state.selectedProduct.attributes.map(item => item.items.find(item => item.id === 'Yes')));
+    
+      
+    // }
   }
   
   componentDidMount() {
     const data = JSON.parse(localStorage.getItem(`${this.state.productData.id}`));
     if (data) {
       this.setState({
-        productData: data
+        productData: data,
       })
     }    
   }
@@ -90,8 +105,6 @@ export default class ProductDetails extends Component {
           {
             name: name,
             id: id,
-            
-            
           }
         ]
       }
@@ -101,7 +114,11 @@ export default class ProductDetails extends Component {
   }
 
   render() {
-    console.log(this.selectedProductDetails);
+    // console.log(this.props.data.data.category.products.map(product => product.id));
+    // console.log(this.props.data.data.category.products.map(product => product.attributes.map(att => att)));
+    // console.log(this.state.productAttributes.filter(att => att.name.includes(' ') === true));
+    // console.log(this.state.productAttributes.filter(att => att.items.map(item => item.id)));
+  
     return (
       <div className='product-details container'>
         {this.props.data.loading === true ? <div>Loading...</div> :
@@ -128,7 +145,7 @@ export default class ProductDetails extends Component {
                         <div className='text-container'>
                           {attribute.name === "Size" && attribute !== null ?
                             <>
-                              {attribute.items.map(attrItem => <button key={attrItem.id + Math.random()} type='button' className={`data-btn attributes-size ${this.state.productData.activeSize === attrItem.id ? 'active-size' : '' }`} onClick={() => this.handleSize(attrItem.id)} >{attrItem.displayValue}</button>)}
+                              {attribute.items.map(attrItem => <button key={attrItem.id + Math.random()} type='button' className={`data-btn attributes-size ${this.state.productData.activeSize === attrItem.id ? 'active-size' : attribute.items[0] && '40' }`} onClick={() => this.handleSize(attrItem.id)} >{attrItem.displayValue}</button>)}
                             </>
                             :
 
@@ -172,8 +189,15 @@ export default class ProductDetails extends Component {
                     ))}
                   </div>
                   <div className="add-to-cart">
-                  <PrimaryBTN text='Add To Cart' handleAddToCart={this.props.click} selectedCurrency={this.props.selectedCurrency} data={this.props.data} url={this.url} />
+                  <PrimaryBTN text='Add To Cart' handleAddToCart={this.props.click} selectedCurrency={this.props.selectedCurrency} data={this.props.data} selectedProduct={this.state.selectedProduct} url={this.url} length={this.state.productData.activeYesNo.length} />
                   </div>
+                  {this.props.data.data.category.products.map(product => (
+                    <>
+                    {this.state.productData.id === product.id && 
+                    <div className='product-description' dangerouslySetInnerHTML={{ __html: product.description }}></div>
+                    }
+                    </>
+                  ))}
                 </div>
               </>
               : null}
@@ -184,3 +208,5 @@ export default class ProductDetails extends Component {
     );
   }
 }
+
+// }
