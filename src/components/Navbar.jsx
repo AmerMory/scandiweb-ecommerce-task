@@ -7,9 +7,10 @@ import DropDown from "./DropDown";
 import { Link } from "react-router-dom";
 
 export default function Navbar(props) {
-    const {totalPrice, handleTotalPrice, handleData, selected, cartNumber, handleHover, handleLeave, hoverd, setCartNumber, selectedCategory, setSelectedCategory, setSelected, handleProductCount, selectedCurrency, setSelectedCurrency, productCount, setProductCount, yesNo, setYesNo, handleYesNo} = props
+    const {totalPrice, handleTotalPrice, handleData, selected, cartNumber, handleHover, handleLeave, hoverd, setCartHoverd, setCartNumber, selectedCategory, setSelectedCategory, setSelected, handleProductCount, selectedCurrency, setSelectedCurrency, productCount, setProductCount, yesNo, setYesNo, handleYesNo} = props
 
     const refOne = React.useRef(null);
+
 
     React.useEffect(() => {
         document.addEventListener("click", handleClickOutside, true);
@@ -34,6 +35,18 @@ export default function Navbar(props) {
         e.preventDefault();
     }
 
+    const shoppingCartClicked = () => {
+        handleHover()
+    }
+
+
+    React.useEffect(() => {
+        if (document.getElementById('view-bag-btn') !== null) {        
+            const viewBag = document.getElementById('view-bag-btn')
+            viewBag.addEventListener('click', handleLeave);
+        }
+    })
+    
     return (
         <nav className="nav-bar">
             {handleData.error && <p>Error</p>}
@@ -45,11 +58,16 @@ export default function Navbar(props) {
             </ul>
             <Link to="/"><img src={logo} alt="logo" /></Link>
             <div className="icons">
-                {handleData.data && <DropDown handleHover={handleHover} handleData={handleData} item={handleData.data.currencies} selectedCurrency={selectedCurrency} setSelectedCurrency={setSelectedCurrency} selected={selected} setSelected={setSelected} /> }
-                <div className="shopping-cart" onClick={handleHover} ref={refOne}>
-                    <img src={shoppingCart} alt="shopping Cart" />
-                    {cartNumber > 0 ? <span className="cart-number">{cartNumber}</span> : null}
-                    {hoverd === true ? <DropdownCart handleTotalPrice={handleTotalPrice}
+                {handleData.data &&
+                <DropDown handleHover={handleHover} handleData={handleData} item={handleData.data.currencies} selectedCurrency={selectedCurrency} setSelectedCurrency={setSelectedCurrency} selected={selected} setSelected={setSelected} />
+                }
+                <div className="shopping-cart" onClick={() => shoppingCartClicked()} ref={refOne}>
+                    <div className='shopping-cart-icon'>
+                        <img src={shoppingCart} alt="shopping Cart" id='shopping-cart-icon'/>
+                        {cartNumber > 0 ? <span className="cart-number">{cartNumber}</span> : null}
+                    </div>
+                    {hoverd === true ?
+                    <DropdownCart handleTotalPrice={handleTotalPrice}
                     totalPrice={totalPrice}
                     selectedCurrency={selectedCurrency}
                     cartNumber={cartNumber}
@@ -63,6 +81,9 @@ export default function Navbar(props) {
                     yesNo={yesNo}
                     setYesNo={setYesNo}
                     handleYesNo={handleYesNo}
+                    hoverd={hoverd}
+                    setCartHoverd={setCartHoverd}
+                    handleLeave={handleLeave}
                     /> : null}
                 </div>
             </div>

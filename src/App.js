@@ -87,35 +87,24 @@ function App() {
     localStorage.setItem("selected", JSON.stringify(selected));
   }, [selected]);
 
-  const [productKeyNumber, setProductKeyNumber] = React.useState(0);
+  // const [productKeyNumber, setProductKeyNumber] = React.useState(0);
 
-  const handleClick = (item, amount, key) => () => {
-    if (!selected.some(s => s[0].id === item.id)) {
+
+  const handleClick = (item, amount, key, ddAddedItemData) => () => {
+    // if (!selected.some(s => s[0].id === item.id)) {
       setSelected([...selected,
       [
         item,
         ...selectedCurrency,
         { amount: parseFloat(amount.replace(/,/g, '')) },
         { qty: 1 },
-        `${key}-${productKeyNumber}`,
-      ]
+        `${key}`,
+        JSON.parse(ddAddedItemData),
+      ],
       ]);
       setCartNumber(cartNumber + 1);
-      setProductKeyNumber(productKeyNumber + 1);
-    } else {
-      setSelected([...selected,
-        [
-          item,
-          ...selectedCurrency,
-          { amount: parseFloat(amount.replace(/,/g, '')) },
-          { qty: 1 },
-          `${key}-${productKeyNumber}`,
-        ]
-        ]);
-        setCartNumber(cartNumber + 1);
-        setProductKeyNumber(productKeyNumber + 1);
-    }
   }
+
 
   const [yesNo, setYesNo] = React.useState([]);
   const handleYesNo = (name, id) => {
@@ -136,8 +125,7 @@ function App() {
     setCartHoverd(false);
   }
 
-  const [selectedProductDetails, setSelectedProductDetails] = React.useState([
-  ]);
+  const [selectedProductDetails, setSelectedProductDetails] = React.useState([]);
 
   const handleSelectedProductDetails = (productId, price) => {
       setSelectedProductDetails([productId, price])
@@ -174,6 +162,7 @@ function App() {
           handleHover={handleMouseOverCart}
           handleLeave={handleMouseOutCart}
           hoverd={cartHoverd}
+          setCartHoverd={setCartHoverd}
           handleTotalPrice={handleTotalPrice}
           totalPrice={totalPrice}
         />

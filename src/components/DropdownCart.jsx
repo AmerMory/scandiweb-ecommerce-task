@@ -34,6 +34,13 @@ export default class DropdownCart extends React.Component {
         this.props.setSelected(prevState => prevState.filter(item => item[4] !== id))
     }
 
+    
+    handleClick = () => {
+        this.props.handleLeave()
+        this.props.setCartHoverd(false);
+        console.log(this.props.hoverd)
+    }
+
     render() {
         const DDCartItemStyles = {
             'overflow': 'scroll',
@@ -41,7 +48,7 @@ export default class DropdownCart extends React.Component {
         }
 
         return (
-            <div className="dropdown-cart-items">
+            <div className="dropdown-cart-items" id='dropdown-cart-items'>
                 {this.props.cartNumber <= 0
 
                     ?
@@ -60,7 +67,7 @@ export default class DropdownCart extends React.Component {
                         </div>
 
                         <div className='buttons-container' >
-                            <Link to="/shopping-cart"><button type='button' className='btn secondary-btn' >view bag</button></Link>
+                            <Link to="/shopping-cart"><button type='button' className='btn secondary-btn' id='view-bag-btn' onClick={() => this.handleClick()} >view bag</button></Link>
                             <button type='button' className='btn primary-btn' >check out</button>
                         </div>
                     </>

@@ -63,6 +63,10 @@
     position: relative;
 }
 
+.nav-bar .shopping-cart-icon {
+    cursor: pointer;
+}
+
 .nav-bar .shopping-cart .cart-number {
     width: 20px;
     height: 20px;

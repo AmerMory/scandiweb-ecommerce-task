@@ -12,6 +12,7 @@
     column-gap: 30px;
     row-gap: 30px;
     padding-bottom: 150px;
+    transition: all 0.3s ease-in-out;
 }
 
 .card {

@@ -15,7 +15,7 @@
 }
 
 .count {
-    align-items: end;
+    align-items: flex-end;
     margin-right: 9px;
     display: flex;
     flex-direction: column;
@@ -48,7 +48,7 @@
     font-size: 20px;
     line-height: 2px;
     background-color: transparent;
-    border: 1.5px solid var(--secondary-color);
+    border: 1px solid var(--secondary-color);
     cursor: pointer;
 }
 
@@ -85,16 +85,11 @@
     border: 3px solid var(--primary-color);
 }
 
-.data-btn:active {
-    background-color: var(--secondary-color);
-    color: #fff;
-}
-
 .attributes-size,
 .attributes-capacity,
 .attributes-color,
 .attributes-yesNo {
-    margin: 0px 4.5px;
+    margin: 0px 4px;
     font-size: 16px;
     width: 30%;
     height: 25px;
@@ -120,9 +115,14 @@
     margin-right: 0px;
 }
 
-.data .title {
+.cart-item-container .data h2 {
     font-weight: var(--light);
-    font-size: 1.5em;
+    font-size: 18px;
+}
+
+.cart-item-container .data .remaining-name {
+    margin-bottom: 5px;
+    margin-top: 0px;
 }
 
 .cart-item-container .data .price {

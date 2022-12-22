@@ -14,12 +14,14 @@ export default class DDCartItem extends React.Component {
             yesNoAttributes: [],
             productData: {
                 id: this.props.id,
-                activeSize: '40',
+                activeSize: '',
                 activeCapacity: '1T',
                 activeSwatch: 'White',
                 activeYesNo: [
-                ]
+                ],
+                key: '',
             },
+            disabled: false,
         }
     }
 
@@ -39,12 +41,29 @@ export default class DDCartItem extends React.Component {
               yesNoAttributes: this.props.data.handleData.data.category.products.map(product => product).find(item => item.id === this.state.productData.id).attributes.filter(att => att.name.includes(' ') === true),
               productData: {
                 ...this.state.productData,
-                // activeYesNo should be an array of objects with name and id and 'yes' is the default id
-                activeYesNo: this.props.data.handleData.data.category.products.map(product => product).find(item => item.id === this.state.productData.id).attributes.filter(att => att.name.includes(' ') === true).map(att => ({ name: att.name, id: 'Yes' }))
-      
-              }
-            })
-          }
+                key: this.props.productKeyNumber
+            }
+            
+        })
+        }
+
+        if (this.state.productData.activeSize === '' && !prevState.productData.activeSize) {
+            this.setState(prevState => ({
+                productData: {
+                    ...prevState.productData,
+                    activeSize: "40",
+                }
+            }))
+        }
+
+        if (this.state.productData.activeYesNo.length === 0 && this.state.yesNoAttributes !== prevState.yesNoAttributes) {
+            this.setState(prevState => ({
+                productData: {
+                    ...prevState.productData,
+                    activeYesNo: this.props.data.handleData.data.category.products.map(product => product).find(item => item.id === this.state.productData.id).attributes.filter(att => att.name.includes(' ') === true).map(att => ({ name: att.name, id: 'Yes' })),
+                }
+            }))
+        }
 
         if (this.props.productKeyNumber !== localStorage.getItem(`${this.props.productKeyNumber}` && this.props.productKeyNumber === prevState)) {
             localStorage.setItem(`${this.props.productKeyNumber}`, JSON.stringify(this.state.productData))
@@ -74,6 +93,7 @@ export default class DDCartItem extends React.Component {
                 activeSize: e
             }
         }))
+       return this.disablePropsData()
     }
 
     handleCapacity = (e, att) => {
@@ -83,6 +103,7 @@ export default class DDCartItem extends React.Component {
                 activeCapacity: e
             }
         }))
+        return this.disablePropsData()
     }
 
     handleSwatch = (e) => {
@@ -92,6 +113,7 @@ export default class DDCartItem extends React.Component {
                 activeSwatch: e
             }
         }))
+        return this.disablePropsData()
     }
 
     productYesNo = (name, id) => {
@@ -110,11 +132,27 @@ export default class DDCartItem extends React.Component {
           }
     
         }))
-    
-      }
+        return this.disablePropsData()
+    }
 
     get currentImage() {
         return this.props.cartItem[0].gallery[this.state.imageNumber]
+    }
+
+    disablePropsData = () => {
+        if (this.state.disabled === false && this.props.cartItem[5] !== null) {
+            
+            this.setState(prevState => ({
+                productData: {
+                    ...prevState.productData,
+                    activeSize: this.props.cartItem[5].activeSize,
+                    activeCapacity: this.props.cartItem[5].activeCapacity,
+                    activeSwatch: this.props.cartItem[5].activeSwatch,
+                    activeYesNo: this.props.cartItem[5].activeYesNo,
+                },
+                disabled: true,
+            }))
+        }
     }
 
     cartItemDecrement = (cardId) => {
@@ -167,20 +205,17 @@ export default class DDCartItem extends React.Component {
     }
 
     render() {
-        // this.props.data.data.category.products.map(product => product).find(item => item.id === this.url).attributes.filter(att => att.name.includes(' ') === true).map(att => ({ name: att.name, id: 'Yes' }))
-        // console.log(this.props.data.handleData.data.category.products.map(product => product).find(item => item.id === this.state.productData.id).attributes.filter(att => att.name.includes(' ') === true).map(att => ({ name: att.name, id: 'Yes' })))
-        // console.log(this.props.productKeyNumber);
+
+        this.disablePropsData()
+        
         return (
             <>
                 {this.props.data.cartNumber >= 1 ?
 
                     <div className='cart-item-container'>
                         <div className="data">
-                            {this.props.productName === true ? <>
                                 <h2 className='first-name'>{this.props.title.split(' ')[0]}</h2>
                                 <h2 className='remaining-name'>{this.props.title.indexOf(this.props.title.split(' ')[1]) !== -1 ? this.props.title.slice(this.props.title.indexOf(this.props.title.split(' ')[1])) : null}</h2>
-                            </>
-                                : <h3 className='title'>{this.props.title}</h3>}
                             <p className='price'>{this.props.data.selectedCurrency}{this.props.cartItem[2].amount}</p>
                             <div className="attributes-container">
                                 {this.props.cartItem[0].attributes.map(attribute =>
