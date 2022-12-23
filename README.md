@@ -5,7 +5,7 @@ Key version changes:
 -	out of stock is now accessible
 -	whole product card is now clickable
 
-### Scandiweb Ecommerce V1.1
+### Scandiweb Ecommerce V1.2
 Key version changes:
 
 # Category Page
